@@ -177,19 +177,22 @@ h4, .h4 {
   transition: background-color var(--t);
 }
 /* The circle behind the arrow expands to fill the whole button on hover.
-   Animated with clip-path because width:40px -> auto cannot be transitioned. */
+   Driven by the four inset lengths: they interpolate cleanly from the very
+   first hover, unlike width:40px -> auto or a clip-path shape swap. */
 .btn::after {
   content: "";
   position: absolute;
-  inset: 0;
   z-index: 1;
+  top: 5px;
+  right: 5px;
+  bottom: 5px;
+  left: calc(100% - 45px);   /* 40px wide, so a perfect 40x40 circle */
   border-radius: var(--pill);
   background: var(--white);
-  clip-path: inset(5px 5px 5px calc(100% - 45px) round var(--pill));
-  transition: clip-path var(--t);
+  transition: top var(--t), right var(--t), bottom var(--t), left var(--t);
 }
 .btn:hover::after,
-.btn:focus-visible::after { clip-path: inset(3px round var(--pill)); }
+.btn:focus-visible::after { top: 3px; right: 3px; bottom: 3px; left: 3px; }
 .btn:hover .btn__label,
 .btn:focus-visible .btn__label { color: var(--red); }
 
@@ -353,6 +356,7 @@ h4, .h4 {
   margin: 0 auto;
 }
 .hero__copy { display: flex; flex-direction: column; gap: 24px; max-width: 620px; }
+.hero h1 .line { display: block; }
 .hero h1 .word {
   display: inline-block;
   opacity: 0;
@@ -570,7 +574,15 @@ h4, .h4 {
   text-transform: uppercase;
 }
 .card-stat__body { display: flex; flex-direction: column; gap: 12px; padding: 0 10px; }
-.card-stat__mark { position: absolute; right: 12px; bottom: -10px; width: 130px; opacity: 0.07; pointer-events: none; }
+.card-stat__mark {
+  position: absolute;
+  right: 12px;
+  bottom: -10px;
+  width: 130px;
+  height: auto;          /* the HTML height attribute would otherwise stretch it */
+  opacity: 0.07;
+  pointer-events: none;
+}
 
 /* ---------- Services (dark, sticky stack) ---------- */
 .services { background: var(--ink); }

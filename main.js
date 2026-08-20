@@ -57,10 +57,17 @@ const ENDPOINT = '';
   /* ---------- Hero headline: word by word ---------- */
   const heroTitle = document.getElementById('heroTitle');
   if (heroTitle) {
-    const words = heroTitle.textContent.trim().split(/\s+/);
-    heroTitle.innerHTML = words
-      .map(function (w) { return '<span class="word">' + w + '</span>'; })
-      .join(' ');
+    // wrap each word, but keep the author's line breaks intact
+    const lines = heroTitle.querySelectorAll('.line');
+    const targets = lines.length ? lines : [heroTitle];
+
+    targets.forEach(function (line) {
+      line.innerHTML = line.textContent
+        .trim()
+        .split(/\s+/)
+        .map(function (w) { return '<span class="word">' + w + '</span>'; })
+        .join(' ');
+    });
 
     heroTitle.querySelectorAll('.word').forEach(function (w, i) {
       w.style.transitionDelay = (0.08 * i + 0.15) + 's';
